@@ -240,7 +240,7 @@ DWORD WINAPI do_child_work(LPVOID p)
     }
     if (WaitForSingleObject(thread_handle[1], 100) == WAIT_TIMEOUT)
     {
-        TerminateThread(thread_handle[0], 5678);
+        TerminateThread(thread_handle[1], 5678);
     }
 
     if (!CloseHandle(pi.hProcess) || !CloseHandle(pi.hThread) || !CloseHandle(thread_handle[0]) || !CloseHandle(thread_handle[1]))
