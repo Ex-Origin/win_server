@@ -4,29 +4,41 @@
 
 ## Usage
 
-`win_server execve_file port`
+`win_server execve_file port [timeout(ms)]`
 
 For example: 
+
 ```bash
-D:\>win_server babystack.exe 1000
+D:\>win_server babystack.exe 10009
+```
+
+And you also can set timetout to 1 second.
+
+```bash
+D:\>win_server babystack.exe 10009 1000
 ```
 
 ## Principle
 
-`Win server` runs the `execve file` as child process at first, then creates two pipe for `stdout` and `stdin`, finally creates three threads:
+`Win server` runs the `do_child_work` as main thread at first, then creates two pipe for `stdout` and `stdin`, thirdly create child process, then creates two threads:
 
 1. `input`: It recive buffer as `stdin` from remote socket with obstruction.
 2. `output`: It send information which is from the stdout of program to remote socket with obstruction.
-3. `end`: When the program is over or the socket is closed, the function will release resource. And it also will be obstructed.
+
+Finally, release resource.
 
 Becase all funcions could be obstructed, so it is friendly to your `CPU`.
 
 ```
-D:\>server.exe babystack.exe 1001
-Connect 192.168.3.1
-sockConn is 276
-Process 328 is runing
-Process 328 is end with code 1234
+E:\test>win_server.exe LazyFragmentationHeap.exe 10009
+2019-11-05 21:03:11  START: Ex  pid: 8400  from: 192.168.1.107:39098
+2019-11-05 21:03:12  EXIT: Ex  ExitCode: 5678  pid: 8400  from: 192.168.1.107:39098  duration: 1(sec)
 ```
 
-> The reason of exit code `1234` could be that the remote socket has closed connection.
+> The reason of exit code `1234` could be that the remote socket has closed connection, and `5678` could be timeout.
+
+## Compile parameters
+
+```bash
+cl win_server.c /MT /GS /O2
+```
