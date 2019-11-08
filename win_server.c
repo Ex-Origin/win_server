@@ -67,7 +67,12 @@ DWORD WINAPI input_handle(LPVOID p)
             TerminateProcess(local->process, 1234);
             return 0;
         }
-        ASSERT(WriteFile(local->stdin_write, buf, (DWORD)nbytes, &result, NULL), "WriteFile error!");
+        
+        if(!WriteFile(local->stdin_write, buf, (DWORD)nbytes, &result, NULL))
+        {
+            TerminateProcess(local->process, 1234);
+            return 0;
+        }
     }
 }
 
@@ -226,7 +231,7 @@ DWORD WINAPI do_child_work(LPVOID p)
 
     self_handle = local->self_handle;
     HeapFree(global_heap, HEAP_ZERO_MEMORY, local);
-    if (self_handle)
+    if (self_handle != INVALID_HANDLE_VALUE)
     {
         ASSERT(CloseHandle(self_handle), "CloseHandle error!");
     }
@@ -301,7 +306,7 @@ int main(int argc, char **args)
         child_work->execve_file = local_exeve_file;
         child_work->conn = sockConn;
         child_work->magic2 = MAGIC2;
-        child_work->self_handle = 0;
+        child_work->self_handle = INVALID_HANDLE_VALUE;
         child_work->timeout = timeout;
 
         child_work->self_handle = CreateThread(NULL, 0, do_child_work, child_work, 0, NULL);
