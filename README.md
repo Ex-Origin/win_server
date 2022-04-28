@@ -1,6 +1,6 @@
 # Win Server
 
-`Win Server` can be used to debug windows program with `pwntools`, it's just like `xinted` which redirects windows program to computer port.
+`Win Server` can be used to debug windows program with `pwntools`, it's just like `xinetd` which redirects windows program to computer port.
 
 ## Usage
 
