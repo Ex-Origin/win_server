@@ -57,6 +57,8 @@ win_server.exe python.exe script.py
 
 ## Architecture
 
+For a more detailed implementation walkthrough, see [DESIGN.md](DESIGN.md).
+
 ### Event Loop
 
 The server uses a single-threaded event loop that waits on:
